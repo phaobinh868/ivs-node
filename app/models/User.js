@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var bcrypt   = require('bcrypt-nodejs');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const bcrypt   = require('bcryptjs');
 
-var schema = new Schema({
+const schema = new Schema({
     name: {
         type: String,
         trim: true
@@ -25,15 +25,18 @@ var schema = new Schema({
 schema.pre('save', function (next) {
     var user = this;
     if(!user.isModified('password')) return next();
-    bcrypt.hash(user.password,null, null, function(err,hash){
-      if(err) return next(err);
-        user.password = hash;
-        next();
-    });
+    bcrypt.genSalt(10, function (err, salt) {
+        if (err) return next(err)
+        bcrypt.hash(user.password, salt, function (err, hash) {
+            if (err) return next(err)
+            user.password = hash
+            next();
+        })
+    })
 });
 schema.methods.comparePassword = function(password){
     var user = this;
-    return bcrypt.compareSync(password, user.password);
+    return bcrypt.compare(password, user.password);
 };
 const User = mongoose.model(
   "User",
