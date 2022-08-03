@@ -1,4 +1,4 @@
-const User = require('../../models/user');
+const User = require('../../models/User');
 const { AppError } = require('../../utils/errors');
 const constant = require('../../configs/constant');
 const jwt = require('../../utils/jwt');
