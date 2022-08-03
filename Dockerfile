@@ -1,12 +1,13 @@
 FROM node:13-alpine
 
-WORKDIR /app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-COPY package*.json ./
-
+COPY package.json /usr/src/app/
 RUN npm install
 
-COPY . .
+COPY . /usr/src/app
+
 # Development
 # RUN npm install -g nodemon
 # CMD ["npm", "run", "dev"]
